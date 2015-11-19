@@ -13,4 +13,3 @@ $scheme->addLink('start','pause');
 $scheme->addLink('pause','finish');
 
 $scheme->generateGraph($format);
-echo $scheme->getCommand();

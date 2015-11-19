@@ -6,38 +6,60 @@
 */
 class Schceme
 {
-	private $format;
-	private $command;
+	
+	// Here are stored nodes that needs 
+	// special options
 	private $nodes = array();
+	// Here are stored all relations between nodes
 	private $links = array();
 
 	function __construct()
 	{
-
+		// some init settings
 	}
 
+	/**
+	* This method runs command,
+	* and sends result to browser
+	*/	
 	public function generateGraph($format = 'png')
 	{	
 		passthru($this->getCommand($format));
 	}
 
-	public function getCommand($format)
+	/**
+	* This method creates and gets command
+	* to generate graph
+	*/	
+	private function getCommand($format)
 	{
 		$command = 'echo "digraph G {'.$this->getGraphBody().'}" | dot -T'.$format;
 		return $command;
 	}
 
+	/**
+	* This method adds node to $this->nodes
+	* options need to have this format('option'=>'value')
+	*/	
 	public function addNode($name, array $options)
 	{
 		$this->nodes[$name] = $options; 
 	}
 
+	/**
+	* This method adds relation between two nodes
+	* if nodes are not defined, graphviz will create them
+	*/	
 	public function addLink($from, $to)
 	{
 		$this->links[] = array('from' => $from, 'to' => $to);
 	}
 
-	public function getGraphBody()
+	/**
+	* This method generates valid graphviz syntax
+	* from arrays
+	*/	
+	private function getGraphBody()
 	{
 		$graphBody = '';
 
@@ -51,6 +73,9 @@ class Schceme
 		return $graphBody;
 	}
 
+	/**
+	* This method parses options to valid graphviz syntax
+	*/	
 	public function parseNodeOptions(array $options)
 	{
 		$nodeOptions = "";
