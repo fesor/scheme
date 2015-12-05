@@ -1,0 +1,6 @@
+digraph G { start[shape=Mdiamond,color=salmon2,style=filled];
+finish[sides=3,distortion=0,shape=polygon,style=filled,color=greenyellow];
+"start"->"finish";
+"start"->"pause";
+"pause"->"finish";
+ }

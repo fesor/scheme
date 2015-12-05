@@ -3,13 +3,21 @@
 include 'src/scheme.php';
 $format = 'jpg';
 
-$scheme = new Schceme();
+$dotFile = 'files'.DIRECTORY_SEPARATOR.'dot';
+$outputFile = 'images'.DIRECTORY_SEPARATOR.'output.png';
 
-header("Content-Type: image/".$format);
-$scheme->addNode("start", array("shape"=>"Mdiamond"));
-$scheme->addNode("finish", array("shape"=>"Mdiamond"));
+$scheme = new Schceme('C:\Program Files (x86)\Graphviz2.38\bin\dot.exe');
+
+$scheme->addNode("start", array("shape"=>"Mdiamond", "color"=>"salmon2", "style"=>"filled"));
+$scheme->addNode("finish", array("sides"=>"3", "distortion"=>"0", "shape"=>"polygon", "style"=>"filled", "color"=>"greenyellow"));
 $scheme->addLink('start','finish');
 $scheme->addLink('start','pause');
 $scheme->addLink('pause','finish');
+$scheme->writeDotFile($dotFile);
 
-$scheme->generateGraph($format);
+// you can save graph if you want
+//$scheme->saveGraph($dotFile, $outputFile);
+//echo '<img src="'.$outputFile.'">';
+// or just show it
+header("Content-Type: image/".$format);
+echo $scheme->generateGraph($dotFile, $format);

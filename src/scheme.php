@@ -12,28 +12,49 @@ class Schceme
 	private $nodes = array();
 	// Here are stored all relations between nodes
 	private $links = array();
+	// Path to graphviz/bin/dot on your machine
+	private $path;
 
-	function __construct()
+	/*
+	*	@var path Path to graphviz
+	*   leave it empty if graphviz is in your path
+	*/
+	function __construct($path = 'dot')
 	{
-		// some init settings
+		$this->path = $path;
 	}
 
 	/**
 	* This method runs command,
 	* and sends result to browser
 	*/	
-	public function generateGraph($format = 'png')
+	public function generateGraph($dotFileName, $format = 'png')
 	{	
-		passthru($this->getCommand($format));
+		$image = passthru($this->getCommand($dotFileName, $format), $error);
+		if($error){
+			throw new Exception("Error executing command");
+		}
+		return $image;
+	}
+
+	/**
+	* This method runs command,
+	* and saves result to file
+	*/	
+	public function saveGraph($dotFileName, $outputFileName, $format = 'png')
+	{	
+		exec($this->getCommand($dotFileName, $format,  $outputFileName), $output, $result);
+		return $result;
 	}
 
 	/**
 	* This method creates and gets command
 	* to generate graph
 	*/	
-	private function getCommand($format)
+	public function getCommand($dotFileName, $format, $outputFileName = null)
 	{
-		$command = 'echo "digraph G {'.$this->getGraphBody().'}" | dot -T'.$format;
+		$outputFileName = (empty($outputFileName))?'':'-o'.$outputFileName;
+		$command = '"'.$this->path.'" '.$dotFileName.' -T'.$format.' '.$outputFileName;
 		return $command;
 	}
 
@@ -68,9 +89,39 @@ class Schceme
 		}
 
 		foreach ($this->links as $link) {
-			$graphBody = $graphBody.'\"'.$link['from'].'\"->\"'.$link['to'].'\";'.PHP_EOL;
+			$graphBody = $graphBody.'"'.$link['from'].'"->"'.$link['to'].'";'.PHP_EOL;
 		}
 		return $graphBody;
+	}
+
+	/*
+	* Gets full contents of graph file,
+	* which can be executed by graphviz
+	*/
+	public function getGraph($name = 'G'){
+		$graph  = 'digraph '.$name.' { ';
+		$graph .= $this->getGraphBody();
+		$graph .= ' }';
+		return $graph;
+	}
+
+	/*
+	* Writes dot code to file
+	*/
+	public function writeDotFile($filename){
+		
+		$file = fopen($filename, 'w');
+		if(!$file){
+			throw new Exception("Can't open file");			
+		}
+
+		$success = fwrite($file, $this->getGraph());
+
+		if(!$success){
+			throw new Exception("Can't write file ".$filename);
+		}
+
+		return $success;
 	}
 
 	/**
