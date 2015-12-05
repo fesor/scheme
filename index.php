@@ -6,7 +6,10 @@ $format = 'jpg';
 $dotFile = 'files'.DIRECTORY_SEPARATOR.'dot';
 $outputFile = 'images'.DIRECTORY_SEPARATOR.'output.png';
 
-$scheme = new Schceme('C:\Program Files (x86)\Graphviz2.38\bin\dot.exe');
+
+$scheme = new Schceme();
+//if you use windows
+//$scheme = new Schceme('C:\Program Files (x86)\Graphviz2.38\bin\dot.exe');
 
 $scheme->addNode("start", array("shape"=>"Mdiamond", "color"=>"salmon2", "style"=>"filled"));
 $scheme->addNode("finish", array("sides"=>"3", "distortion"=>"0", "shape"=>"polygon", "style"=>"filled", "color"=>"greenyellow"));
