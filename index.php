@@ -7,7 +7,7 @@ $dotFile = 'files'.DIRECTORY_SEPARATOR.'dot';
 $outputFile = 'images'.DIRECTORY_SEPARATOR.'output.png';
 
 
-$scheme = new Schceme();
+$scheme = new Scheme();
 //if you use windows
 //$scheme = new Schceme('C:\Program Files (x86)\Graphviz2.38\bin\dot.exe');
 
