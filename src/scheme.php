@@ -4,7 +4,7 @@
 * The simple class to generate graphviz schemes
 * Requires graphviz installation
 */
-class Schceme
+class Scheme
 {
 	
 	// Here are stored nodes that needs 
